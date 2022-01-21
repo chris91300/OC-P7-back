@@ -1,8 +1,9 @@
 const express = require('express');
 const helmet = require('helmet');
 const app = express();
-//const authRouter = require('./router/authRouter');
-//const saucesRouter = require('./router/saucesRouter');
+const usersRouter = require('./routes/usersRoutes');
+const mediasRouter = require('./routes/mediasRoutes');
+const commentsRouter = require('./routes/commentsRoutes');
 
 
 
@@ -18,16 +19,17 @@ app.use((req, res, next) => {
 
 
   // Pour que l'on puisse autoriser à récupérer les images
-app.use(helmet());
-app.use(helmet.crossOriginResourcePolicy({ policy: "same-site" }));
+//app.use(helmet());
+//app.use(helmet.crossOriginResourcePolicy({ policy: "same-site" }));
 
 
 
 
 //app.use(express.static("images"));
 app.use(express.static("dist"));
-//app.use('/api/auth', authRouter);
-//app.use('/api/sauces', saucesRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/medias', mediasRouter);
+app.use('/api/comments', commentsRouter);
 
 
 

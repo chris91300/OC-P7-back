@@ -33,7 +33,7 @@ sequelize = new Sequelize('groupomaniaMichelChristophe', process.env.DB_USER, pr
             }           
         },
         userLiked : {
-            type : DataTypes.ARRAY,
+            type : DataTypes.ARRAY(DataTypes.INTEGER),
             allowNull : false,
             defaultValue: []
         },
