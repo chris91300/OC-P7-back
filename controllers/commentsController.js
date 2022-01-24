@@ -3,10 +3,25 @@ const { response } = require('express');
 const Comment = require('../models/CommentModel');
 
 
-
-exports.GET_ALL = ( req, res ) => {
+/**
+ * get all comments on a specific media
+ */
+exports.GET_ALL = async ( req, res ) => {
     console.log("comment GET_ALL")
-    res.send("comment GET_ALL")
+    let mediaId = req.params.id;
+
+    try{
+
+        let results = await Comment.findAll({ where : { mediaID : mediaId } } );
+
+        res.status(200).json( results);
+
+    } catch (err) {
+
+        console.log(err);
+        res.status(500).json( { message : "Une erreur est survenue."})
+
+    }
 }
 
 exports.GET_ONE = ( req, res ) => {

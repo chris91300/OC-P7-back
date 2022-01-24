@@ -1,20 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const { GET_ALL, GET_ONE, CREATE, UPDATE, DELETE, LIKE, REPORTED } = require('../controllers/commentsController');
+const verifyID = require('../utils/middlewares/verifyID');
+const verifyCommentID = require('../utils/middlewares/verifyCommentID');
 
+// in parameters, id is use for mediaId not commentId
 
-router.get('/:mediaId', GET_ALL);
+router.get('/:id', verifyID, GET_ALL);
 
-router.get('/:mediaId/:commentId', GET_ONE);
+router.get('/:id/:commentId', verifyID, verifyCommentID, GET_ONE);
 
-router.post('/:mediaId', CREATE)
+router.post('/:id', verifyID, CREATE)
 
-router.put('/:mediaId/update', UPDATE);
+router.put('/:id/update', verifyID, UPDATE);
 
-router.delete('/:mediaId/delete', DELETE);
+router.delete('/:id/delete', verifyID, DELETE);
 
-router.post('/:mediaId/like', LIKE);
+router.post('/:id/like', verifyID,LIKE);
 
-router.post('/:mediaId/reported', REPORTED);
+router.post('/:id/reported', verifyID, REPORTED);
 
 module.exports = router;
