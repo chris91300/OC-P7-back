@@ -1,18 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const { SIGNUP, LOGIN, UPDATE, DELETE, LIKE } = require('../controllers/usersController');
+const verifySignupUserData = require('../utils/middlewares/verifySignupUserData');
+const verifyLoginUserData = require('../utils/middlewares/verifyLoginUserData');
+const verifyID = require('../utils/middlewares/verifyID');
+const verifyUpdateUserData = require('../utils/middlewares/verifyUpdateUserData');
  
 
-router.post('/signup', SIGNUP);
+router.post('/signup', verifySignupUserData, SIGNUP);
 
 
-router.post('/login', LOGIN);
+router.post('/login',verifyLoginUserData, LOGIN);
 
 
-router.put('/:id/update', UPDATE);
+router.put('/:id/update', verifyID, verifyUpdateUserData, UPDATE);
 
 
-router.delete('/:id/delete', DELETE);
+router.delete('/:id/delete', verifyID, DELETE);
 
 
 module.exports = router;

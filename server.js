@@ -2,6 +2,9 @@ require("dotenv").config();
 const app = require('./app');
 const { Sequelize } = require('sequelize');
 const Database = require('./src/js/class/Database')
+const Comment = require('./models/CommentModel');
+const User = require('./models/UserModel');
+const Media = require('./models/MediaModel');
 
 const username = process.env.DB_USER;
 const password = process.env.DB_PASSWORD;
@@ -18,6 +21,11 @@ sequelize = new Sequelize('groupomaniaMichelChristophe', username, password, {
     try {
         await sequelize.authenticate();
         console.log('Connection has been established successfully.');
+        User.sync();
+        Comment.sync();
+        Media.sync();
+        
+        
       } catch (error) {
           
           if(error.parent.errno === 1049){

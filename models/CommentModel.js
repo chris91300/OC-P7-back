@@ -1,17 +1,17 @@
 const { Sequelize, DataTypes } = require('sequelize');
-
+console.log(process.env.DB_USER)
 sequelize = new Sequelize('groupomaniaMichelChristophe', process.env.DB_USER, process.env.DB_PASSWORD, {
     host: 'localhost',
     dialect: 'mysql'
   });
 
 
-  sequelize.define('comment', {
+const Comment = sequelize.define('comment', {
         userID : {
             type : DataTypes.INTEGER,
             allowNull : false,
         },
-        userID : {
+        mediaID : {
             type : DataTypes.INTEGER,
             allowNull : false,
         },
@@ -23,18 +23,32 @@ sequelize = new Sequelize('groupomaniaMichelChristophe', process.env.DB_USER, pr
             }
         },
         userLiked : {
-            type : DataTypes.ARRAY(DataTypes.INTEGER),
+            type : DataTypes.JSON,
             allowNull : false,
             defaultValue: []
         },
         reported : {
             type : DataTypes.BOOLEAN,
-            defaultValue : false
+            defaultValue : '0'
         },
         userReported : {
             type : DataTypes.INTEGER,
-            allowNull : false,
             defaultValue: 0
         }
   })
+
+ 
+    /*Comment
+    .sync()
+    .then(()=>{
+        console.log('table comments created')
+    })
+    .catch((err)=>{
+        console.log('il y a une erreur de comment sync')
+        console.log(err)
+    })*/
+
+    module.exports = Comment;
+  
+  
 

@@ -6,7 +6,7 @@ sequelize = new Sequelize('groupomaniaMichelChristophe', process.env.DB_USER, pr
   });
 
 
-  sequelize.define('user', {
+const User = sequelize.define('user', {
         firstName : {
             type : DataTypes.STRING,
             allowNull : false,
@@ -24,13 +24,22 @@ sequelize = new Sequelize('groupomaniaMichelChristophe', process.env.DB_USER, pr
         pseudo : {
             type : DataTypes.STRING,
             allowNull : false,
+            unique : true,
             validate:{
                 is : /^[\w]*$/
             }
         },
         password : {
             type : DataTypes.STRING,
-            allowNull : false            
+            allowNull : false
+        },
+        email : {
+            type : DataTypes.STRING,
+            allowNull : false,
+            unique : true,
+            validate:{
+                is : /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+            }
         },
         createAt : {
             field : 'create_at',
@@ -39,4 +48,7 @@ sequelize = new Sequelize('groupomaniaMichelChristophe', process.env.DB_USER, pr
             defaultValue: DataTypes.NOW
         }
   })
+
+
+  module.exports = User;
 
