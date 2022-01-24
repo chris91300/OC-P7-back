@@ -248,5 +248,44 @@ exports.LIKE = async ( req, res ) => {
  */
 exports.REPORTED = async ( req, res ) => {
     console.log("comment reported")
-    res.send("comment reported")
+    let mediaId = req.params.id;  
+    let commentId = req.params.commentId;  
+
+    try{
+
+        let where = {
+            id : commentId,
+            mediaID : mediaId
+        }
+
+        let result = await Comment.findAll( { where : where } );
+
+        if ( result.length != 0 ) {
+
+            let comment = result[0].dataValues;
+            let reportedTotal = comment.userReported + 1;
+
+
+            let query = await Comment.update(
+                    { reported : true, userReported : reportedTotal },
+                    { where : where }
+                )
+            
+            
+            if (!query){
+                throw new Error();
+            }
+
+            res.status(200).json({ message : "Nous avons bien pris en compte votre signalement."})
+
+
+        } else {
+            res.status(400).json( { message : "commentaire inconnu." } );
+        }
+
+    } catch (err) {
+
+        res.status(500).json( { message : "Une erreur est survenue." } );
+
+    }
 }

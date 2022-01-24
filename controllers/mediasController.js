@@ -275,7 +275,7 @@ exports.LIKE = async ( req, res ) => {
 
 /**
  * Allow to report a media
- * Administrator can see all medias reported and can delete them
+ * Administrator can see all medias reported and can delete them 
  */
 exports.REPORTED = async ( req, res ) => {
     console.log("media reported")
