@@ -57,7 +57,30 @@ exports.GET_ONE = async ( req, res ) => {
 
 exports.CREATE = async ( req, res ) => {
     console.log("comment CREATE")
-    res.send("comment create")
+    let mediaId = req.params.id;
+    let { userId , text } = req.body;
+
+    try{
+
+        let data = {
+            userID : userId,
+            mediaID : mediaId,
+            text : text
+        };
+
+        let result = await Comment.create(data)
+        
+        if (result) {
+
+            res.status(201).json( { message : "Commentaire ajouté." } );
+
+        }
+
+    } catch (err) {
+
+        res.status(500).json( { message : "Une erreur est survenue." } );
+
+    }
 }
 
 exports.UPDATE = ( req, res ) => {
