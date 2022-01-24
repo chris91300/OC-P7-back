@@ -9,7 +9,7 @@ module.exports = async ( req, res, next ) => {
     if ( imagePath ) {
         try{
             let imagePathOutput = imagePath.replace(/\.jpeg|\.jpg|\.png$/, ".webp");
-            let img = await sharp(imagePath).resize(700, 525).toFormat('webp');
+            let img = await sharp(imagePath).resize(500, 300).toFormat('webp');
 
             img.toFile(imagePathOutput, (err, img)=>{
                 if (err) throw err;
