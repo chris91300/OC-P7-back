@@ -4,7 +4,7 @@ const { GET_ALL, GET_ONE, CREATE, UPDATE, DELETE, LIKE, REPORTED } = require('..
 const verifyID = require('../utils/middlewares/verifyID');
 const upload = require('../utils/middlewares/upload');
 const verifyMediaData = require('../utils/middlewares/verifyMediaData');
-const verifyMediaUserId = require('../utils/middlewares/verifyMediaUserId');
+const verifyIfUserExist = require('../utils/middlewares/verifyIfUserExist');
 const canIDo = require('../utils/middlewares/canIDo');
 
 
@@ -18,8 +18,8 @@ router.put('/:id/update', verifyID, upload, verifyMediaData, canIDo, UPDATE);
 
 router.delete('/:id/delete', verifyID, canIDo,  DELETE);
 
-router.post('/:id/like', verifyID, verifyMediaUserId, LIKE);
+router.post('/:id/like', verifyID, verifyIfUserExist, LIKE);
 
-router.post('/:id/reported', verifyID, verifyMediaUserId,  REPORTED);
+router.post('/:id/reported', verifyID, verifyIfUserExist,  REPORTED);
 
 module.exports = router;

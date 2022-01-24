@@ -134,7 +134,34 @@ exports.UPDATE = async ( req, res ) => {
  */
 exports.DELETE = async ( req, res ) => {
     console.log("comment delete")
-    res.send("comment delete")
+    let mediaId = req.params.id;
+    let commentId = req.params.commentId;
+    let { userId } = req.body;
+
+    try{
+        let where = {
+            id : commentId,
+            userID : userId,
+            mediaID : mediaId
+        }
+        
+        let result = await Comment.destroy({ where : where } )
+        
+        
+        if (result != undefined) {
+
+            res.status(200).json( { message : "Commentaire retiré." } );
+
+        } else {
+
+            res.status(400).json( { message : "Commentaire inconnu." } );
+        }
+
+    } catch (err) {
+
+        res.status(500).json( { message : "Une erreur est survenue." } );
+
+    }
 }
 
 /**

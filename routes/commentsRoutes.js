@@ -4,6 +4,7 @@ const { GET_ALL, GET_ONE, CREATE, UPDATE, DELETE, LIKE, REPORTED } = require('..
 const verifyID = require('../utils/middlewares/verifyID');
 const verifyCommentID = require('../utils/middlewares/verifyCommentID');
 const verifyCommentData = require('../utils/middlewares/verifyCommentData');
+const verifyIfUserExist = require('../utils/middlewares/verifyIfUserExist');
 
 // in parameters, id is use for mediaId not commentId
 
@@ -15,7 +16,7 @@ router.post('/:id', verifyID, verifyCommentData, CREATE)
 
 router.put('/:id/:commentId/update', verifyID, verifyCommentID, verifyCommentData, UPDATE);
 
-router.delete('/:id/:commentId/delete', verifyID, verifyCommentID, DELETE);
+router.delete('/:id/:commentId/delete', verifyID, verifyCommentID, verifyIfUserExist, DELETE);
 
 router.post('/:id/:commentId/like', verifyID, verifyCommentID, LIKE);
 
