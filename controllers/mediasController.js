@@ -6,7 +6,9 @@ const path = require('path');
 const fs = require('fs');
 
 
-
+/**
+ * Get all medias
+ */
 exports.GET_ALL = async ( req, res ) => {
     console.log("media GET_ALL")
     
@@ -26,6 +28,10 @@ exports.GET_ALL = async ( req, res ) => {
 
 }
 
+
+/**
+ * Get a specific media
+ */
 exports.GET_ONE = async ( req, res ) => {
     console.log("media GET_ONE")
     let mediaId = req.params.id;
@@ -48,6 +54,10 @@ exports.GET_ONE = async ( req, res ) => {
     }
 }
 
+
+/**
+ * Create a new media
+ */
 exports.CREATE = async ( req, res ) => {
     console.log("media CREATE")
     if ( req.file ) {
@@ -85,6 +95,10 @@ exports.CREATE = async ( req, res ) => {
     
 }
 
+
+/**
+ * Update a media
+ */
 exports.UPDATE = async ( req, res ) => {
     console.log("media update")
     let mediaId = req.params.id;
@@ -133,6 +147,10 @@ exports.UPDATE = async ( req, res ) => {
     
 }
 
+
+/**
+ * Delete a media
+ */
 exports.DELETE = async ( req, res ) => {
     console.log("media delete")
     let mediaId = req.params.id;
@@ -181,6 +199,9 @@ exports.DELETE = async ( req, res ) => {
     
 }
 
+/**
+ * Allow to user to like the media
+ */
 exports.LIKE = async ( req, res ) => {
     console.log("media like")
     let mediaId = req.params.id;
@@ -196,8 +217,7 @@ exports.LIKE = async ( req, res ) => {
             if ( result.length != 0 ) {
     
                 let media = result[0].dataValues;
-                console.log("media vaut ")
-                console.log(media)
+                
                 switch(like){
 
                     case 1:
@@ -225,8 +245,7 @@ exports.LIKE = async ( req, res ) => {
                         { userLiked : media.userLiked},
                         { where : { id : mediaId } }
                     )
-                console.log("la query vaut ")
-                console.log(query);
+               
 
                 if (!query){
                     throw new Error();
@@ -254,7 +273,46 @@ exports.LIKE = async ( req, res ) => {
 
 }
 
+/**
+ * Allow to report a media
+ * Administrator can see all medias reported and can delete them
+ */
 exports.REPORTED = async ( req, res ) => {
     console.log("media reported")
-    res.send("media reported")
+    let mediaId = req.params.id;  
+
+    try{
+
+        let result = await Media.findAll( { where : { id : mediaId } } );
+
+        if ( result.length != 0 ) {
+
+            let media = result[0].dataValues;
+            let reportedTotal = media.userReported + 1;
+
+
+            let query = await Media.update(
+                    { reported : true, userReported : reportedTotal },
+                    { where : { id : mediaId } }
+                )
+            
+            
+            if (!query){
+                throw new Error();
+            }
+
+            res.status(200).json({ message : "Nous avons bien pris en compte votre signalement."})
+
+
+        } else {
+            res.status(400).json( { message : "media inconnu." } );
+        }
+
+    } catch (err) {
+
+        res.status(500).json( { message : "Une erreur est survenue." } );
+
+    }
+
+   
 }
