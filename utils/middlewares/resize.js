@@ -1,5 +1,4 @@
 const fs = require('fs');
-const jimp = require('jimp');
 const sharp = require('sharp');
 
 module.exports = async ( req, res, next ) => {
@@ -14,6 +13,7 @@ module.exports = async ( req, res, next ) => {
             img.toFile(imagePathOutput, (err, img)=>{
                 if (err) throw err;
 
+                req.file.filename = req.file.filename.replace(/\.jpeg|\.jpg|\.png$/, ".webp");
                 req.file.path = imagePathOutput;
                 fs.unlink(imagePath, (err)=>{if (err) throw err;})
                 next()

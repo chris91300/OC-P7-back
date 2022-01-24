@@ -13,9 +13,9 @@ router.get('/', GET_ALL);
 
 router.get('/:id', verifyID, GET_ONE);
 
-router.post('/create', upload, resize, verifyMediaData, CREATE)
+router.post('/create', upload, verifyMediaData, resize, CREATE)
 
-router.put('/:id/update', verifyID, upload, verifyMediaData, canIDo, UPDATE);
+router.put('/:id/update', verifyID, upload, verifyMediaData, canIDo, resize, UPDATE);
 
 router.delete('/:id/delete', verifyID, canIDo,  DELETE);
 
