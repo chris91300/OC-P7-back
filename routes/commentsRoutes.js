@@ -13,12 +13,12 @@ router.get('/:id/:commentId', verifyID, verifyCommentID, GET_ONE);
 
 router.post('/:id', verifyID, verifyCommentData, CREATE)
 
-router.put('/:id/update', verifyID, UPDATE);
+router.put('/:id/:commentId/update', verifyID, verifyCommentID, verifyCommentData, UPDATE);
 
-router.delete('/:id/delete', verifyID, DELETE);
+router.delete('/:id/:commentId/delete', verifyID, verifyCommentID, DELETE);
 
-router.post('/:id/like', verifyID,LIKE);
+router.post('/:id/:commentId/like', verifyID, verifyCommentID, LIKE);
 
-router.post('/:id/reported', verifyID, REPORTED);
+router.post('/:id/:commentId/reported', verifyID, verifyCommentID, REPORTED);
 
 module.exports = router;
