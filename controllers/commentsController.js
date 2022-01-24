@@ -169,7 +169,78 @@ exports.DELETE = async ( req, res ) => {
  */
 exports.LIKE = async ( req, res ) => {
     console.log("comment like")
-    res.send("comment like")
+    let mediaId = req.params.id;
+    let commentId = req.params.commentId;
+    let userId = req.body.userId;
+    let like = req.body.like == 0 || req.body.like == 1 ? parseInt(req.body.like) : undefined;
+    
+    if ( like != undefined ){
+
+        try{
+
+            let where = {
+                id : commentId,
+                userID : userId,
+                mediaID : mediaId
+            }
+            
+            let result = await Comment.findAll( { where : where } );
+            
+            if ( result.length != 0 ) {
+    
+                let comment = result[0].dataValues;
+                
+                switch(like){
+
+                    case 1:
+                        if ( comment.userLiked.indexOf(userId) === -1 ){
+
+                            comment.userLiked.push(userId);
+
+                        }
+                        break;
+
+                    case 0:
+                        let index = comment.userLiked.indexOf(userId);
+                        if ( index != -1 ){
+
+                            comment.userLiked.splice(index, 1);
+
+                        }
+
+                    default:
+                        //nothing
+                        
+                }
+
+                let query = await Comment.update(
+                        { userLiked : comment.userLiked},
+                        { where : { id : commentId } }
+                    )
+               
+
+                if (!query){
+                    throw new Error();
+                }
+
+                res.status(200).json({ message : "Votre avis à bien été enregistré"})
+    
+    
+            } else {
+                res.status(400).json( { message : "commentaire inconnu." } );
+            }
+    
+        } catch (err) {
+    
+            res.status(500).json( { message : "Une erreur est survenue." } );
+    
+        }
+
+    } else {
+
+        res.status(400).json( { message : "Vous aimez ou pas?" } );
+
+    }
 }
 
 /**
