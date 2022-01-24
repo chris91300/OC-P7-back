@@ -24,12 +24,38 @@ exports.GET_ALL = async ( req, res ) => {
     }
 }
 
-exports.GET_ONE = ( req, res ) => {
+exports.GET_ONE = async ( req, res ) => {
     console.log("comment GET_ONE")
-    res.send("comment GET_ONE")
+    let mediaId = req.params.id;
+    let commentId = req.params.commentId;
+
+    try{
+
+        let results = await Comment.findAll( { where : { 
+            id : commentId,
+            mediaID : mediaId
+        }})
+
+        if ( results.length != 0) {
+
+            let comment = results[0].dataValues;
+
+            res.status(200).json( comment );
+
+        } else {
+
+            res.status(400).json( { message : "Commentaire inconnu." } );
+
+        }
+
+    } catch (err) {
+
+        res.status(500).json( { message : "Une erreur est survenue." } );
+
+    }
 }
 
-exports.CREATE = ( req, res ) => {
+exports.CREATE = async ( req, res ) => {
     console.log("comment CREATE")
     res.send("comment create")
 }
