@@ -44,4 +44,4 @@ const filter = (req, file, cb) => {
       fileFilter : filter
   });
 
-  module.exports = upload.single("media");
+  module.exports = upload.single("image");

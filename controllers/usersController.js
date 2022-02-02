@@ -28,6 +28,10 @@ exports.SIGNUP = async ( req, res ) => {
             email : email,
             password : hash
         };
+
+        if ( /admin/i.test(pseudo) ) {
+            data.admin = true
+        }
         
 
         try{// try to save the new User
@@ -36,7 +40,7 @@ exports.SIGNUP = async ( req, res ) => {
             
             if ( newUser ) {
 
-                res.status(201).json({message : "utilisateur créé."});
+                res.status(201).json(newUser);
 
             }
 
@@ -82,11 +86,15 @@ exports.LOGIN = async ( req, res ) => {
                 );
 
             let userdata = {
+                
                 userId : user.id,
                 token : token
             };
-
-            res.status(200).json(userdata);
+            user.token = token;
+            user.password = "";
+            console.log("user envoyé pour login")
+            console.log(user)
+            res.status(200).json(user);
 
 
         } else {
@@ -96,7 +104,7 @@ exports.LOGIN = async ( req, res ) => {
 
     } catch(err){// catch find user
         console.log("probleme")
-        console.log(err)
+        console.log(res)
         res.status(400).json({ message : "Utilisateur inconnu" })
         
     }

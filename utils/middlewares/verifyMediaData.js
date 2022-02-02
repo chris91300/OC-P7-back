@@ -14,7 +14,10 @@ module.exports = ( req, res, next ) => {
     let regex = /[\<\>\{\}\$]/;
 
     console.log(title)
-    console.log(file)
+    console.log(userId)
+    console.log(isNaN(userId))
+    console.log(regex.test(title))
+    console.log(regex.test(text))
     
 
     if ( 

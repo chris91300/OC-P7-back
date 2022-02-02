@@ -71,13 +71,14 @@ exports.CREATE = async ( req, res ) => {
             fileName : fileName
         }
         
+        
         try{
             
             let media = await Media.create(data);
 
             if (media) {
                 
-                res.status(201).json({ message : "image reçu"})
+                res.status(201).json(media)
 
             }
 

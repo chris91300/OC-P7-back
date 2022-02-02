@@ -41,11 +41,9 @@ const User = sequelize.define('user', {
                 is : /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
             }
         },
-        createAt : {
-            field : 'create_at',
-            allowNull : false,
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW
+        admin : {
+            type : DataTypes.BOOLEAN,
+            defaultValue: false
         }
   })
 

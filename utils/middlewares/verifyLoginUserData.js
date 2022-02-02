@@ -4,7 +4,7 @@ const verifyLoginUserData = ( req, res, next )=>{
     let { pseudo, password } = req.body;
 
     if (
-        pseudo != undefined & /^[\w]*$/.test(pseudo) &
+        pseudo != undefined & /^[\w]{6,}$/.test(pseudo) &
         password != undefined & /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$/.test(password)
     ) {
 
