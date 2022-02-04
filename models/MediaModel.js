@@ -1,4 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
+const Comment = require('./CommentModel')
 
 sequelize = new Sequelize('groupomaniaMichelChristophe', process.env.DB_USER, process.env.DB_PASSWORD, {
     host: 'localhost',
@@ -7,10 +8,10 @@ sequelize = new Sequelize('groupomaniaMichelChristophe', process.env.DB_USER, pr
 
 
 const Media = sequelize.define('media', {
-        userID : {
+       /* userId : {
             type : DataTypes.INTEGER,
             allowNull : false,
-        },
+        },*/
         title : {
             type : DataTypes.STRING,
             allowNull : false,
@@ -32,6 +33,13 @@ const Media = sequelize.define('media', {
                 is : /^[\w \-\_]*\.(jpg|jpeg|png|webp)$/
             }           
         },
+        urlImage : {
+            type : DataTypes.STRING,
+            allowNull : false,
+            validate:{
+                is : /^http:\/\/localhost:3000\/[\w \-\_]*\.(jpg|jpeg|png|webp)$/
+            } 
+        },
         userLiked : {
             type : DataTypes.JSON,
             allowNull : false,
@@ -48,5 +56,14 @@ const Media = sequelize.define('media', {
         }
   }, { tableName : 'medias'})
 
+  
+  Media.hasOne(Comment, {
+    foreignKey: {
+        name : "mediaId",
+        type : DataTypes.INTEGER,
+        allowNull : false,
+    },
+  })
+  Comment.belongsTo(Media);
 
   module.exports = Media;

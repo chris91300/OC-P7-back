@@ -7,13 +7,14 @@ const verifyMediaData = require('../utils/middlewares/verifyMediaData');
 const verifyIfUserExist = require('../utils/middlewares/verifyIfUserExist');
 const canIDo = require('../utils/middlewares/canIDo');
 const resize = require('../utils/middlewares/resize');
+const authorization = require('../utils/middlewares/authorization');
 
 
-router.get('/', GET_ALL); 
+router.get('/', authorization, GET_ALL); 
 
 router.get('/:id', verifyID, GET_ONE);
 
-router.post('/create', upload, verifyMediaData, resize, CREATE)
+router.post('/create', authorization , upload, verifyMediaData, resize, CREATE)
 
 router.put('/:id/update', verifyID, upload, verifyMediaData, canIDo, resize, UPDATE);
 

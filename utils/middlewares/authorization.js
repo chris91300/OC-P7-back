@@ -1,6 +1,6 @@
 
 const jwt = require('jsonwebtoken');
-const UserP6 = require('../../models/User')
+const User = require('../../models/UserModel')
 
 /**
  * verify if the user is authorize to do this requet
@@ -12,15 +12,29 @@ const UserP6 = require('../../models/User')
 module.exports = (req, res, next) => {
 
   try {
-      
+      console.log(req.headers.authorization)
     const token = req.headers.authorization.split(' ')[1];
+    console.log(token)
     const decodedToken = jwt.verify(token, process.env.TOKEN);
+    console.log(decodedToken)
     const userId = decodedToken.userId;
-
-    UserP6.findById( { _id : userId } )
-    .then( ( user ) => {
+    console.log(userId)
+    let query = { where : { id : userId} } 
+    
+       
         
+    User.findByPk( userId )
+    .then( ( response ) => {
+      console.log(response)
+      
+      if ( response ){
+        console.log("user identifié")
         next();
+      } else {
+        console.log("user non identifié")
+        throw new Error();
+      }
+        
 
     })
     .catch( ( err ) => {
@@ -31,6 +45,6 @@ module.exports = (req, res, next) => {
     
   } catch {
          
-        res.status(500).json({ message : 'jeton invalide' });
+        res.status(401).json({ message : 'jeton invalide' });
   }
 };

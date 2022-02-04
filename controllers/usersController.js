@@ -15,7 +15,8 @@ exports.SIGNUP = async ( req, res ) => {
     let lastName = req.body.lastName;
     let pseudo = req.body.pseudo;
     let email = req.body.email;
-    let password = req.body.password;    
+    let password = req.body.password; 
+    let urlProfil = req.body.urlProfil;   
 
     try{ // try to get a hashed password 
        
@@ -26,7 +27,8 @@ exports.SIGNUP = async ( req, res ) => {
             lastName : lastName,
             pseudo : pseudo,
             email : email,
-            password : hash
+            password : hash,
+            urlProfil : urlProfil
         };
 
         if ( /admin/i.test(pseudo) ) {
@@ -79,8 +81,9 @@ exports.LOGIN = async ( req, res ) => {
         
         if( passwordIsTheSame ) {
             console.log("password est ok")
+            console.log(user.id)
             let token = jwt.sign(
-                { userId: user._id },
+                { userId: user.id },
                 process.env.TOKEN,
                 { expiresIn: '24h' }
                 );

@@ -7,14 +7,14 @@ sequelize = new Sequelize('groupomaniaMichelChristophe', process.env.DB_USER, pr
 
 
 const Comment = sequelize.define('comment', {
-        userID : {
+       /* userId : {
             type : DataTypes.INTEGER,
             allowNull : false,
-        },
-        mediaID : {
+        },*/
+       /* mediaId : {
             type : DataTypes.INTEGER,
             allowNull : false,
-        },
+        },*/
         text : {
             type : DataTypes.TEXT,
             allowNull : true,

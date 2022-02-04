@@ -1,4 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
+const Comment = require('./CommentModel');
+const Media = require('./MediaModel');
 
 sequelize = new Sequelize('groupomaniaMichelChristophe', process.env.DB_USER, process.env.DB_PASSWORD, {
     host: 'localhost',
@@ -41,12 +43,35 @@ const User = sequelize.define('user', {
                 is : /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
             }
         },
+        urlProfil : {
+            type : DataTypes.STRING,
+            allowNull : false
+        },
         admin : {
             type : DataTypes.BOOLEAN,
             defaultValue: false
         }
-  })
+  });
 
+
+  User.hasOne(Media, {
+    foreignKey: {
+        name : "userId",
+        type : DataTypes.INTEGER,
+        allowNull : false,
+    },
+  })
+  Media.belongsTo(User);
+
+
+  User.hasOne(Comment, {
+    foreignKey: {
+        name : "userId",
+        type : DataTypes.INTEGER,
+        allowNull : false,
+    },
+  })
+  Comment.belongsTo(User);
 
   module.exports = User;
 

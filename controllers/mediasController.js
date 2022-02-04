@@ -2,6 +2,7 @@
 
 const { response } = require('express');
 const Media = require('../models/MediaModel');
+const User = require('../models/UserModel');
 const path = require('path');
 const fs = require('fs');
 
@@ -13,8 +14,16 @@ exports.GET_ALL = async ( req, res ) => {
     console.log("media GET_ALL")
     
     try{
+        /*User.hasOne(Media, {
+            foreignKey: 'userId'
+          })*/
 
-        let medias = await Media.findAll();
+        let medias = await Media.findAll({
+            include : [{
+                model : User,
+                require : false
+            }]
+        });
         console.log(medias)
         res.status(200).json(medias);
 
@@ -38,10 +47,11 @@ exports.GET_ONE = async ( req, res ) => {
 
     try{
 
-        let media = await Media.findAll({
-            where : {
-                id : mediaId
-            }
+        let media = await Media.findByPk( mediaId, {
+            include : [{
+                model : User,
+                require : false
+            }]
         });
         console.log(media)
         res.status(200).json(media);
@@ -65,10 +75,11 @@ exports.CREATE = async ( req, res ) => {
         let { title, text, userId } = req.body;
         let fileName = req.file.filename;
         let data = {
-            userID : userId,
+            userId : userId,
             title : title,
             text : text,
-            fileName : fileName
+            fileName : fileName,
+            urlImage : "http://localhost:3000/"+fileName
         }
         
         
@@ -77,8 +88,13 @@ exports.CREATE = async ( req, res ) => {
             let media = await Media.create(data);
 
             if (media) {
-                
-                res.status(201).json(media)
+                let newMedia = await Media.findByPk(media.id, {
+                    include : [{
+                        model : User,
+                        require : false
+                    }]
+                });
+                res.status(201).json(newMedia)
 
             }
 
@@ -106,7 +122,7 @@ exports.UPDATE = async ( req, res ) => {
     let { userId, title, text } = req.body;
     let file = req.file;
     let dataUpdated = {
-        userID : userId,
+        userId : userId,
         title : title,
         text : text
     }
@@ -117,7 +133,7 @@ exports.UPDATE = async ( req, res ) => {
 
     try{
 
-        let result = await Media.findAll({where : { id : mediaId, userID : userId } } ); 
+        let result = await Media.findAll({where : { id : mediaId, userId : userId } } ); 
 
         if ( result.length != 0 ) {
             if ( file ){
@@ -161,7 +177,7 @@ exports.DELETE = async ( req, res ) => {
 
         let resultFind = await Media.findAll({where : {
             id : mediaId,
-            userID : userId
+            userId : userId
         }})
         
         if ( resultFind.length != 0 ){
@@ -176,7 +192,7 @@ exports.DELETE = async ( req, res ) => {
 
                 let resultDestroy = await Media.destroy({where : {
                     id : mediaId,
-                    userID : userId
+                    userId : userId
                 }})
             
                 if (resultDestroy){

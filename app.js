@@ -21,12 +21,20 @@ app.use((req, res, next) => {
   // Pour que l'on puisse autoriser à récupérer les images
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "same-site" }));
+// pour communiquer avec l'API
+app.use(helmet.contentSecurityPolicy({
+    directives : {
+      defaultSrc: "localhost:8080",
+      'img-src' : "localhost:8080"
+    }
+  }));
 
 
 
 
 //app.use(express.static("images"));
 app.use(express.static("medias"));
+app.use("/profils/", express.static("profils"));
 app.use('/api/users', usersRouter);
 app.use('/api/medias', mediasRouter);
 app.use('/api/comments', commentsRouter);
