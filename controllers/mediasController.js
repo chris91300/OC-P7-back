@@ -14,14 +14,13 @@ exports.GET_ALL = async ( req, res ) => {
     console.log("media GET_ALL")
     
     try{
-        /*User.hasOne(Media, {
-            foreignKey: 'userId'
-          })*/
 
         let medias = await Media.findAll({
             include : [{
                 model : User,
-                require : false
+                require : true,
+                attributes: ["pseudo", "urlProfil"]
+                
             }]
         });
         console.log(medias)

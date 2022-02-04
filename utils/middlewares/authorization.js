@@ -12,20 +12,16 @@ const User = require('../../models/UserModel')
 module.exports = (req, res, next) => {
 
   try {
-      console.log(req.headers.authorization)
+      
     const token = req.headers.authorization.split(' ')[1];
-    console.log(token)
     const decodedToken = jwt.verify(token, process.env.TOKEN);
-    console.log(decodedToken)
     const userId = decodedToken.userId;
-    console.log(userId)
     let query = { where : { id : userId} } 
     
        
         
     User.findByPk( userId )
     .then( ( response ) => {
-      console.log(response)
       
       if ( response ){
         console.log("user identifié")
