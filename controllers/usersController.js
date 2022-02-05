@@ -66,6 +66,7 @@ exports.SIGNUP = async ( req, res ) => {
  */
 exports.LOGIN = async ( req, res ) => {
     console.log("user login")
+    
     let pseudo= req.body.pseudo;
     let password = req.body.password;
     let query = { where : { pseudo : pseudo} } 
@@ -88,15 +89,24 @@ exports.LOGIN = async ( req, res ) => {
                 { expiresIn: '24h' }
                 );
 
-            let userdata = {
+           /* let userSession = {
+                pseudo : user.pseudo,
+                password : password
+            }
+            console.log("session")
+            console.log(userSession)
+            req.session.userSession = userSession;
+
+            console.log(req.session.userSession)*/
+
+          /*  let userdata = {
                 
                 userId : user.id,
                 token : token
-            };
+            };*/
             user.token = token;
             user.password = "";
-            console.log("user envoyé pour login")
-            console.log(user)
+            
             res.status(200).json(user);
 
 
@@ -107,7 +117,7 @@ exports.LOGIN = async ( req, res ) => {
 
     } catch(err){// catch find user
         console.log("probleme")
-        console.log(res)
+        console.log(err)
         res.status(400).json({ message : "Utilisateur inconnu" })
         
     }
