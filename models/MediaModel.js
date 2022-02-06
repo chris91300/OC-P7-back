@@ -57,6 +57,8 @@ const Media = sequelize.define('media', {
   }, { tableName : 'medias'})
 
   
+
+  // Association with comment
   Media.hasOne(Comment, {
     foreignKey: {
         name : "mediaId",

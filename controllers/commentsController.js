@@ -59,7 +59,7 @@ exports.GET_ONE = async ( req, res ) => {
 }
 
 /**
- * create a new comment about a media
+ * create a new comment about a media 
  */
 exports.CREATE = async ( req, res ) => {
     console.log("comment CREATE")
@@ -69,16 +69,16 @@ exports.CREATE = async ( req, res ) => {
     try{
 
         let data = {
-            userID : userId,
-            mediaID : mediaId,
+            userId : userId,
+            mediaId : mediaId,
             text : text
         };
 
-        let result = await Comment.create(data)
+        let comment = await Comment.create(data)
         
-        if (result) {
+        if (comment) {
 
-            res.status(201).json( { message : "Commentaire ajouté." } );
+            res.status(201).json( comment );
 
         }
 

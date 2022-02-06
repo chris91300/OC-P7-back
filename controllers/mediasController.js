@@ -5,6 +5,7 @@ const Media = require('../models/MediaModel');
 const User = require('../models/UserModel');
 const path = require('path');
 const fs = require('fs');
+const Comment = require('../models/CommentModel');
 
 
 /**
@@ -16,12 +17,14 @@ exports.GET_ALL = async ( req, res ) => {
     try{
 
         let medias = await Media.findAll({
-            include : [{
-                model : User,
-                require : true,
-                attributes: ["pseudo", "urlProfil"]
+            include : [
+                {
+                    model : User,
+                    require : true,
+                    attributes: ["pseudo", "urlProfil"]
                 
-            }]
+                }
+            ]
         });
         console.log(medias)
         res.status(200).json(medias);

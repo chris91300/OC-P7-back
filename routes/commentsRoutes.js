@@ -7,7 +7,7 @@ const verifyCommentData = require('../utils/middlewares/verifyCommentData');
 const verifyIfUserExist = require('../utils/middlewares/verifyIfUserExist');
 const verifyIfMediaExist = require('../utils/middlewares/verifyIfMediaExist');
 
-// in parameters, id is use for mediaId not commentId
+// in parameters, id is use for mediaId not commentId 
 
 router.get('/:id', verifyID, GET_ALL);
 
