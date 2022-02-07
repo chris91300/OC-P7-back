@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const usersRouter = require('./routes/usersRoutes');
 const mediasRouter = require('./routes/mediasRoutes');
 const commentsRouter = require('./routes/commentsRoutes');
+const adminRouter = require('./routes/adminRoutes');
 const sessionRouter = require('./routes/sessionRoutes');
 /*
 // creating 24 hours from milliseconds
@@ -60,6 +61,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/medias', mediasRouter);
 app.use('/api/comments', commentsRouter);
 app.use('/api/session', sessionRouter);
+app.use('/api/admin', adminRouter);
 
 
 
