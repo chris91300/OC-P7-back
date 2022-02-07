@@ -1,6 +1,7 @@
 
 const { response } = require('express');
 const Comment = require('../models/CommentModel');
+const User = require('../models/UserModel');
 
 
 /**
@@ -12,7 +13,13 @@ exports.GET_ALL = async ( req, res ) => {
 
     try{
 
-        let results = await Comment.findAll({ where : { mediaID : mediaId } } );
+        let results = await Comment.findAll({
+            where : { mediaID : mediaId },
+            include : [{
+                model : User,
+                attributes : ["urlProfil", "pseudo"]
+            }]
+         } );
 
         res.status(200).json( results);
 
