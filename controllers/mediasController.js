@@ -15,8 +15,12 @@ exports.GET_ALL = async ( req, res ) => {
     console.log("media GET_ALL")
     
     try{
-
+        
+        
         let medias = await Media.findAll({
+            order : [
+                ["createdAt", "desc"]
+            ],
             include : [
                 {
                     model : User,
@@ -26,7 +30,7 @@ exports.GET_ALL = async ( req, res ) => {
                 }
             ]
         });
-        console.log(medias)
+        
         res.status(200).json(medias);
 
     } catch ( err ) {
