@@ -177,42 +177,33 @@ exports.UPDATE = async ( req, res ) => {
 exports.DELETE = async ( req, res ) => {
     console.log("media delete")
     let mediaId = req.params.id;
-    let userId = req.body.userId;
 
     try{
 
-        let resultFind = await Media.findAll({where : {
-            id : mediaId,
-            userId : userId
-        }})
+        let media = await Media.findByPk( mediaId );        
         
-        if ( resultFind.length != 0 ){
-            let media = resultFind[0].dataValues;
-                let oldFileName = media.fileName;
-                let oldPathFile = path.resolve('./medias')+"/"+oldFileName;
-                fs.unlink(oldPathFile, (err)=>{
+        let oldFileName = media.fileName;
+        let oldPathFile = path.resolve('./medias')+"/"+oldFileName;
+        
+        fs.unlink(oldPathFile, (err)=>{
 
-                    if (err ){ console.log(err)}
-                    
-                });
-
-                let resultDestroy = await Media.destroy({where : {
-                    id : mediaId,
-                    userId : userId
-                }})
+            if (err ){ console.log(err)}
             
-                if (resultDestroy){
-            
-                    res.json({message : "supprimé"})
+        });
 
-                } else {
-                    
-                    res.status(401).json({message : "Vous n'êtes pas autorisé à supprimer ce media destroy"})
-                }
-        }else {
-                    
-            res.status(401).json({message : "Vous n'êtes pas autorisé à supprimer ce media findall"})
+        let resultDestroy = await Media.destroy({where : {
+            id : mediaId
+        }})
+    
+        if (resultDestroy){
+    
+            res.json({message : "supprimé"})
+
+        } else {
+            
+            res.status(401).json({message : "Vous n'êtes pas autorisé à supprimer ce media destroy"})
         }
+        
 
         
     }catch (err){
@@ -306,30 +297,58 @@ exports.REPORTED = async ( req, res ) => {
 
     try{
 
-        let result = await Media.findAll( { where : { id : mediaId } } );
+        let media = await Media.findByPk( mediaId );
+        
+        let reportedTotal = media.userReported + 1;
 
-        if ( result.length != 0 ) {
-
-            let media = result[0].dataValues;
-            let reportedTotal = media.userReported + 1;
-
-
-            let query = await Media.update(
-                    { reported : true, userReported : reportedTotal },
-                    { where : { id : mediaId } }
-                )
-            
-            
-            if (!query){
-                throw new Error();
-            }
-
-            res.status(200).json({ message : "Nous avons bien pris en compte votre signalement."})
-
-
-        } else {
-            res.status(400).json( { message : "media inconnu." } );
+        let query = await Media.update(
+                { reported : true, userReported : reportedTotal },
+                { where : { id : mediaId } }
+            )
+        
+        
+        if (!query){
+            throw new Error();
         }
+
+        res.status(200).json({ message : "Nous avons bien pris en compte votre signalement."})
+
+
+    } catch (err) {
+
+        res.status(500).json( { message : "Une erreur est survenue." } );
+
+    }
+
+   
+}
+
+
+/**
+ * Allow to remove the report of the  media only by admin
+ */
+ exports.REMOVE_REPORTED = async ( req, res ) => {
+    console.log("media remove reported")
+    let mediaId = req.params.id;  
+
+    try{
+
+        let media = await Media.findByPk( mediaId );
+        
+        let reportedTotal = media.userReported - 1;
+
+        let query = await Media.update(
+                { reported : false, userReported : reportedTotal },
+                { where : { id : mediaId } }
+            )
+        
+        
+        if (!query){
+            throw new Error();
+        }
+
+        res.status(200).json({ message : "Nous avons bien pris en compte votre signalement."})
+
 
     } catch (err) {
 

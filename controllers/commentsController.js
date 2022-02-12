@@ -140,19 +140,14 @@ exports.UPDATE = async ( req, res ) => {
  * delete a comment
  */
 exports.DELETE = async ( req, res ) => {
-    console.log("comment delete")
-    let mediaId = req.params.id;
-    let commentId = req.params.commentId;
-    let { userId } = req.body;
+    console.log("comment delete")    
+    let commentId = req.params.id;
+    
 
     try{
-        let where = {
-            id : commentId,
-            userID : userId,
-            mediaID : mediaId
-        }
         
-        let result = await Comment.destroy({ where : where } )
+        
+        let result = await Comment.destroy({ where : {id : commentId} } )
         
         
         if (result != undefined) {
@@ -295,4 +290,41 @@ exports.REPORTED = async ( req, res ) => {
         res.status(500).json( { message : "Une erreur est survenue." } );
 
     }
+}
+
+
+
+/**
+ * Allow to remove the report of the  comment only by admin
+ */
+ exports.REMOVE_REPORTED = async ( req, res ) => {
+    console.log("comment remove reported")
+    let commentId = req.params.id;  
+
+    try{
+
+        let comment = await Comment.findByPk( commentId );
+        
+        let reportedTotal = comment.userReported - 1;
+
+        let query = await Comment.update(
+                { reported : false, userReported : reportedTotal },
+                { where : { id : commentId } }
+            )
+        
+        
+        if (!query){
+            throw new Error();
+        }
+
+        res.status(200).json({ message : "Nous avons bien pris en compte votre signalement."})
+
+
+    } catch (err) {
+
+        res.status(500).json( { message : "Une erreur est survenue." } );
+
+    }
+
+   
 }
