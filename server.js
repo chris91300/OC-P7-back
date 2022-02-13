@@ -43,6 +43,17 @@ sequelize = new Sequelize('groupomaniaMichelChristophe', username, password, {
   connection();
   
 
+  app.use((req, res, next)=>{
+
+    console.log("onpasse par le middleware")
+    next()
+  })
+
+  app.use((req, res, next) =>{
+
+    console.log("attention page 404. redirection")
+    res.redirect("/");
+  })
 
 
 

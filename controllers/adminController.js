@@ -34,7 +34,7 @@ exports.GET_MEDIAS_REPORTED = async ( req, res )=>{
     } catch ( err ) {
 
         console.log(err);
-        res.status(400).json( { message : err.message } );
+        res.status(400).json( { message : "Une erreur est survenue." } );
 
     }
 
@@ -74,7 +74,7 @@ exports.GET_COMMENTS_REPORTED = async ( req, res )=>{
     } catch ( err ) {
 
         console.log(err);
-        res.status(400).json( { message : err.message } );
+        res.status(400).json( { message : "Une erreur est survenue." } );
 
     }
 

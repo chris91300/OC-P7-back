@@ -16,7 +16,6 @@ exports.GET_ALL = async ( req, res ) => {
     
     try{
         
-        
         let medias = await Media.findAll({
             order : [
                 ["createdAt", "desc"]
@@ -36,7 +35,7 @@ exports.GET_ALL = async ( req, res ) => {
     } catch ( err ) {
 
         console.log(err);
-        res.status(400).json( { message : err.message } );
+        res.status(400).json( { message : "Une erreur est survenue" } );
 
     }
     
@@ -208,7 +207,7 @@ exports.DELETE = async ( req, res ) => {
         
     }catch (err){
         console.log(err)
-        res.status(500).json(err)
+        res.status(500).json({message : "Une erreur est survenue."})
     }
     
 }
