@@ -164,9 +164,9 @@ exports.UPDATE_PICTURE = async (req, res ) => {
         let urlProfil = process.env.URLPROFILDIRECTORY + fileName
         let regexDefaultProfilPicture = /^profil_([1-9]||1[0-4]).jpg$/
 
-        let splitOldUrl = oldUrlProfil.split("/");
-        let lastIndex = parseInt(splitOldUrl.length) -1;
-        let oldFileName = splitOldUrl[lastIndex];
+        /*let splitOldUrl = oldUrlProfil.split("/");
+        let lastIndex = parseInt(splitOldUrl.length) -1;*/
+        let oldFileName = path.basename(oldUrlProfil);
 
         
         try{
@@ -213,6 +213,7 @@ exports.UPDATE_PICTURE = async (req, res ) => {
 exports.DELETE = async ( req, res ) => {
     console.log("user delete")
     let userId = req.params.id;
+    let urlProfil = req.body.urlProfil;
 
     try {
         await User.destroy({
@@ -221,7 +222,8 @@ exports.DELETE = async ( req, res ) => {
             }
           });
 
-        await Media.destroy({
+          //    VISIBLEMENT TOUS CE QUI CONCERNE LE USER ID EST SUPPRIMÉ
+       /* await Media.destroy({
             where: {
                 userId: userId
               }
@@ -231,7 +233,15 @@ exports.DELETE = async ( req, res ) => {
             where: {
                 userId: userId
               }
-        })
+        })*/
+        
+        let fileName = path.basename(urlProfil)
+        let pathToUnlink = path.resolve('./profils')+"/"+fileName;
+        fs.unlink(pathToUnlink, (err)=>{
+
+            if (err ){ console.log(err)}
+            
+        });
 
           res.status(200).json({message : "Votre profil à bien été supprimé."});
 
