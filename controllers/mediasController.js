@@ -111,7 +111,7 @@ exports.CREATE = async ( req, res ) => {
 
     } else {
 
-        res.status(400).json({ message : "vous n'avez pas indiqué d'image ou de vidéo."})
+        res.status(400).json({ message : "vous n'avez pas indiqué d'image."})
 
     }
     

@@ -1,7 +1,12 @@
+
+const path = require('path');
+const fs = require('fs');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { response } = require('express');
 const User = require('../models/UserModel');
+const Media = require('../models/MediaModel');
+const Comment = require('../models/CommentModel');
 
 
 /**
@@ -88,22 +93,7 @@ exports.LOGIN = async ( req, res ) => {
                 process.env.TOKEN,
                 { expiresIn: '24h' }
                 );
-
-           /* let userSession = {
-                pseudo : user.pseudo,
-                password : password
-            }
-            console.log("session")
-            console.log(userSession)
-            req.session.userSession = userSession;
-
-            console.log(req.session.userSession)*/
-
-          /*  let userdata = {
-                
-                userId : user.id,
-                token : token
-            };*/
+           
             user.token = token;
             user.password = "";
             
@@ -162,6 +152,61 @@ exports.UPDATE = async ( req, res ) => {
     }
 }
 
+
+
+exports.UPDATE_PICTURE = async (req, res ) => {
+    console.log("update picture")
+    if ( req.file ) {
+
+        let userId = req.params.id;
+        let oldUrlProfil = req.body.urlProfil;
+        let fileName = req.file.filename;
+        let urlProfil = process.env.URLPROFILDIRECTORY + fileName
+        let regexDefaultProfilPicture = /^profil_([1-9]||1[0-4]).jpg$/
+
+        let splitOldUrl = oldUrlProfil.split("/");
+        let lastIndex = parseInt(splitOldUrl.length) -1;
+        let oldFileName = splitOldUrl[lastIndex];
+
+        
+        try{
+
+            let userUpdate = await User.update({ urlProfil: urlProfil }, {
+                where: {
+                  id: userId
+                }});
+    
+            if ( userUpdate ) {
+                console.log(userUpdate);
+                // delete old
+                if ( !regexDefaultProfilPicture.test(oldFileName) ) {
+                    let pathToUnlink = path.resolve('./profils')+"/"+oldFileName;
+                    fs.unlink(pathToUnlink, (err)=>{
+
+                        if (err ){ console.log(err)}
+                        
+                    });
+                }
+                res.status(200).json({newUrlProfil : urlProfil});
+    
+            }
+
+        }catch(err){
+            console.log(err)
+            res.status(500).json({ message : "Une erreur est survenue lors de la modification de votre photo" })
+
+        }
+        
+        
+
+
+    } else {
+
+        res.status(400).json({ message : "vous n'avez pas indiqué d'image."})
+
+    }
+}
+
 /**
  * user supprime son profil
  */
@@ -175,6 +220,18 @@ exports.DELETE = async ( req, res ) => {
               id: userId
             }
           });
+
+        await Media.destroy({
+            where: {
+                userId: userId
+              }
+        })
+
+        await Comment.destroy({
+            where: {
+                userId: userId
+              }
+        })
 
           res.status(200).json({message : "Votre profil à bien été supprimé."});
 

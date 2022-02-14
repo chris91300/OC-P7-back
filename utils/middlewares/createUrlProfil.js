@@ -7,10 +7,9 @@ module.exports = ( req, res, next ) => {
         let randomNumber = parseInt(Math.random() * (15 - 1) + 1);
         let imageName = "profil_"+randomNumber+".jpg";
         let urlDirectory = process.env.URLPROFILDIRECTORY 
-        let urlProfil = urlDirectory+imageName;
-        console.log(req.body)
+        let urlProfil = urlDirectory+imageName;        
         req.body.urlProfil = urlProfil;
-        console.log(req.body)
+        
         next();
     } catch ( err ) {
 
