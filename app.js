@@ -43,9 +43,8 @@ app.use("/profils/", express.static("profils"));
 app.use('/api/users', usersRouter);
 app.use('/api/medias', mediasRouter);
 app.use('/api/comments', commentsRouter);
-//app.use('/api/session', sessionRouter);
 app.use('/api/admin', adminRouter);
-app.use('/*', ErrorRouter);
+
 
 
 
