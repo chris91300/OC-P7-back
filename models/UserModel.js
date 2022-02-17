@@ -35,6 +35,10 @@ const User = sequelize.define('user', {
             type : DataTypes.STRING,
             allowNull : false
         },
+        loginAttempt : {
+            type : DataTypes.INTEGER,
+            defaultValue : 0
+        },
         email : {
             type : DataTypes.STRING,
             allowNull : false,

@@ -52,8 +52,8 @@ exports.SIGNUP = async ( req, res ) => {
             }
 
         } catch (err) {// catch save user
-            
-            res.status(400).json({ message : err.message })
+                       
+            res.status(400).json({ message : "pseudo déjà pris" })
         }
         
 
@@ -81,28 +81,43 @@ exports.LOGIN = async ( req, res ) => {
         let result = await User.findAll( query);
        
         let user = result[0].dataValues;
+        let loginAttempt = user.loginAttempt;
+        let timeToWait = 0;
         
-        let hash = user.password;
-        let passwordIsTheSame = await bcrypt.compare(password, hash);
-        
-        if( passwordIsTheSame ) {
-            
-            let token = jwt.sign(
-                { userId: user.id },
-                process.env.TOKEN,
-                { expiresIn: '24h' }
-                );
-           
-            user.token = token;
-            user.password = "";
-            
-            res.status(200).json(user);
 
-
-        } else {
-           
-            res.status(400).json({ message : "Password invalide"});
+        if ( loginAttempt > 5 ) {
+            let base = 2000;
+            timeToWait = base * ( loginAttempt - 5)
         }
+
+        console.log("on attent => "+ timeToWait);      
+
+        await setTimeout(async ()=>{
+
+            let hash = user.password;
+            let passwordIsTheSame = await bcrypt.compare(password, hash);
+            
+            if( passwordIsTheSame ) {
+                
+                let token = jwt.sign(
+                    { userId: user.id },
+                    process.env.TOKEN,
+                    { expiresIn: '24h' }
+                    );
+               
+                user.token = token;
+                user.password = "";
+                let result = await User.update( {loginAttempt : 0}, query);
+                res.status(200).json(user);
+    
+    
+            } else {
+                loginAttempt++;
+                let result = await User.update( {loginAttempt : loginAttempt}, query);
+                res.status(400).json({ message : "Password invalide"});
+            }
+        }, timeToWait)
+       
 
     } catch(err){// catch find user
         
