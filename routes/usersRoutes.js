@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { SIGNUP, LOGIN, UPDATE, DELETE, UPDATE_PICTURE } = require('../controllers/usersController');
+const { SIGNUP, LOGIN, UPDATE_PASSWORD, DELETE, UPDATE_PICTURE } = require('../controllers/usersController');
 const verifySignupUserData = require('../utils/middlewares/verifySignupUserData');
 const verifyLoginUserData = require('../utils/middlewares/verifyLoginUserData');
 const verifyID = require('../utils/middlewares/verifyID');
@@ -16,7 +16,8 @@ router.post('/signup', verifySignupUserData, createUrlProfil, SIGNUP);
 router.post('/login',verifyLoginUserData, LOGIN);
 
 
-router.put('/:id/update', verifyID, verifyUpdateUserData, UPDATE);
+router.put('/:id/update/password', verifyID, verifyUpdateUserData, UPDATE_PASSWORD);
+
 router.put('/:id/update/picture', authorization, verifyID, uploadProfil , UPDATE_PICTURE);
 
 

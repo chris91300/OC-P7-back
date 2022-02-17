@@ -9,7 +9,7 @@ const verifySignupUserData = ( req, res, next )=>{
         firstName != undefined & /^[a-zA-Z]*(( |-)[a-zA-Z]*)?$/.test(firstName) &
         pseudo != undefined & /^[\w]*$/.test(pseudo) &
         email != undefined & /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) &
-        password != undefined & /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$/.test(password)
+        password != undefined & /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/.test(password)
     ) {
 
         next();

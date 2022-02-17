@@ -1,20 +1,14 @@
 const express = require('express');
 const helmet = require('helmet');
 const app = express();
-//const cookieParser = require("cookie-parser");
-//const sessions = require('express-session');  //require('cookie-session'); //
 const usersRouter = require('./routes/usersRoutes');
 const mediasRouter = require('./routes/mediasRoutes');
 const commentsRouter = require('./routes/commentsRoutes');
 const adminRouter = require('./routes/adminRoutes');
-//const sessionRouter = require('./routes/sessionRoutes');
-const ErrorRouter = require('./routes/404Routes');
 
 
 
 app.use(express.json());
-// cookie parser middleware
-//app.use(cookieParser());
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -44,10 +38,6 @@ app.use('/api/users', usersRouter);
 app.use('/api/medias', mediasRouter);
 app.use('/api/comments', commentsRouter);
 app.use('/api/admin', adminRouter);
-
-
-
-
 
 
 module.exports = app;

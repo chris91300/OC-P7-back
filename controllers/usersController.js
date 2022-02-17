@@ -86,8 +86,7 @@ exports.LOGIN = async ( req, res ) => {
         let passwordIsTheSame = await bcrypt.compare(password, hash);
         
         if( passwordIsTheSame ) {
-            console.log("password est ok")
-            console.log(user.id)
+            
             let token = jwt.sign(
                 { userId: user.id },
                 process.env.TOKEN,
@@ -101,49 +100,65 @@ exports.LOGIN = async ( req, res ) => {
 
 
         } else {
-            console.log("password pas ok")
+           
             res.status(400).json({ message : "Password invalide"});
         }
 
     } catch(err){// catch find user
-        console.log("probleme")
-        console.log(err)
+        
         res.status(400).json({ message : "Utilisateur inconnu" })
         
     }
 }
 
 /**
- * user modifie son profil 
+ * user update his password 
  */
-exports.UPDATE = async ( req, res ) => {
+exports.UPDATE_PASSWORD = async ( req, res ) => {
     console.log("user update")
     let userId = req.params.id;
-    let password = req.body.password;  
+    let oldPassword = req.body.oldPassword;  
+    let newPassword = req.body.newPassword; 
+    let verificationNewPassword = req.body.verificationNewPassword; 
 
     try{ // try to get a hashed password 
-       
-        let hash = await bcrypt.hash(password, 10);        
-        console.log(hash)
-        try{// try to update user
-            
-            let userUpdate = await User.update({ password: hash }, {
-                where: {
-                  id: userId
-                }});
 
-            if ( userUpdate ) {
-                console.log(userUpdate);
-                res.status(200).json({message : "Votre mot de passe à bien été mis à jour."});
+        let user = await User.findByPk(userId);       
+        
+        let passwordIsTheSame = await bcrypt.compare(oldPassword, user.password);
+
+        if ( passwordIsTheSame ) {
+            
+            if( newPassword === verificationNewPassword ) {
+
+                let hash = await bcrypt.hash(newPassword, 10);
+            
+                let userUpdate = await User.update({ password: hash }, {
+                    where: {
+                        id: userId
+                    }});
+
+                if ( userUpdate ) {
+                    
+                    res.status(200).json({message : "Votre mot de passe à bien été mis à jour."});
+
+                }
+
+
+            } else {
+
+                res.status(400).json({ message : "votre nouveau password et sa vérification ne sont pas identique." })
 
             }
 
-            
 
-        } catch (err) {// catch save user
-            
-            res.status(400).json({ message : err.message })
-        }
+        } else {
+
+            res.status(400).json({ message : "votre ancien password n'est pas valide." })
+
+        }      
+                
+        
         
 
     } catch ( err ) {// catch hash password
