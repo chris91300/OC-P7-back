@@ -66,8 +66,7 @@ exports.SIGNUP = async ( req, res ) => {
 }
 
 /**
- * user se connecte
- * OK
+ * user log in
  */
 exports.LOGIN = async ( req, res ) => {
     console.log("user login")

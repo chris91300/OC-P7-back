@@ -200,7 +200,7 @@ exports.DELETE = async ( req, res ) => {
 
         } else {
             
-            res.status(401).json({message : "Vous n'êtes pas autorisé à supprimer ce media destroy"})
+            res.status(401).json({message : "Vous n'êtes pas autorisé à supprimer ce media"})
         }
         
 
