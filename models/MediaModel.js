@@ -1,17 +1,9 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const Comment = require('./CommentModel')
-
-sequelize = new Sequelize('groupomaniaMichelChristophe', process.env.DB_USER, process.env.DB_PASSWORD, {
-    host: 'localhost',
-    dialect: 'mysql'
-  });
+const sequelize = require('../src/js/class/SequelizeDB')
+const Comment = require('./CommentModel');
 
 
 const Media = sequelize.define('media', {
-       /* userId : {
-            type : DataTypes.INTEGER,
-            allowNull : false,
-        },*/
         title : {
             type : DataTypes.STRING,
             allowNull : false,

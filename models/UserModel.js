@@ -1,11 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../src/js/class/SequelizeDB')
 const Comment = require('./CommentModel');
 const Media = require('./MediaModel');
-
-sequelize = new Sequelize('groupomaniaMichelChristophe', process.env.DB_USER, process.env.DB_PASSWORD, {
-    host: 'localhost',
-    dialect: 'mysql'
-  });
 
 
 const User = sequelize.define('user', {
