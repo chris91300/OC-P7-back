@@ -1,6 +1,10 @@
 const fs = require('fs');
 const sharp = require('sharp');
 
+
+/**
+ * Resize the medias upload by users
+ */
 module.exports = async ( req, res, next ) => {
     
     let imagePath = req.file ? req.file.path : undefined; 

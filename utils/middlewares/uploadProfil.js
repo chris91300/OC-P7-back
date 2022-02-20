@@ -1,6 +1,11 @@
 const path = require('path');
 const multer = require('multer');
 
+
+/**
+ * Use multer to upload the profil image of the user
+ * not in the same directory that medias
+ */
 const storage = multer.diskStorage({    
     destination : path.resolve('./profils'),
     filename : ( req, file, cb ) => {

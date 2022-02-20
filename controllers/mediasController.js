@@ -45,7 +45,7 @@ exports.GET_ALL = async ( req, res ) => {
  * Create a new media
  */
 exports.CREATE = async ( req, res ) => {
-    console.log("media CREATE")
+    
     if ( req.file ) {
 
         let { title, text, userId } = req.body;
@@ -168,7 +168,7 @@ exports.LIKE = async ( req, res ) => {
  * Administrator can see all medias reported and can delete them 
  */
 exports.REPORTED = async ( req, res ) => {
-    console.log("media reported")
+    
     let mediaId = req.params.id;  
 
     try{
@@ -211,7 +211,7 @@ exports.REPORTED = async ( req, res ) => {
  * Get a specific media
  */
  exports.GET_ONE = async ( req, res ) => {
-    console.log("media GET_ONE")
+   
     let mediaId = req.params.id;
 
     try{
@@ -237,7 +237,7 @@ exports.REPORTED = async ( req, res ) => {
  * Update a media
  */
  exports.UPDATE = async ( req, res ) => {
-    console.log("media update")
+    
     let mediaId = req.params.id;
     let { userId, title, text } = req.body;
     let file = req.file;

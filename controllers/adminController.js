@@ -8,7 +8,7 @@ const fs = require('fs');
 const Comment = require('../models/CommentModel');
 
 exports.GET_MEDIAS_REPORTED = async ( req, res )=>{
-    console.log("get medias reported")
+    
     try{
         
         
@@ -45,7 +45,7 @@ exports.GET_MEDIAS_REPORTED = async ( req, res )=>{
  * Allow to remove the report of the  media only by admin
  */
  exports.REMOVE_REPORTED_MEDIA = async ( req, res ) => {
-    console.log("media remove reported")
+    
     let mediaId = req.params.id;  
 
     try{
@@ -78,10 +78,9 @@ exports.GET_MEDIAS_REPORTED = async ( req, res )=>{
 
 
 exports.GET_COMMENTS_REPORTED = async ( req, res )=>{
-    console.log("get comments reported")
+    
     try{
         
-        //voir pourquoi il inclut uniquement user et pas media
         let comments = await Comment.findAll({
             where : {
                 reported : true
@@ -121,7 +120,7 @@ exports.GET_COMMENTS_REPORTED = async ( req, res )=>{
  * Allow to remove the report of the  comment only by admin
  */
  exports.REMOVE_REPORTED_COMMENT = async ( req, res ) => {
-    console.log("comment remove reported")
+    
     let commentId = req.params.id;  
 
     try{
@@ -157,7 +156,7 @@ exports.GET_COMMENTS_REPORTED = async ( req, res )=>{
  * delete a comment
  */
  exports.DELETE_COMMENT = async ( req, res ) => {
-    console.log("comment delete")    
+       
     let commentId = req.params.id;
     
 
@@ -187,7 +186,7 @@ exports.GET_COMMENTS_REPORTED = async ( req, res )=>{
  * Delete a media
  */
  exports.DELETE_MEDIA = async ( req, res ) => {
-    console.log("media delete")
+    
     let mediaId = req.params.id;
 
     try{

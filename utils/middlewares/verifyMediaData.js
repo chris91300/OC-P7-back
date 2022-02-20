@@ -11,14 +11,7 @@ module.exports = ( req, res, next ) => {
     
     let { title, text, userId } = req.body;    
     let file = req.file;
-    let regex = /[\<\>\{\}\$]/;
-
-    console.log(title)
-    console.log(userId)
-    console.log(isNaN(userId))
-    console.log(regex.test(title))
-    console.log(regex.test(text))
-    
+    let regex = /[\<\>\{\}\$]/;    
 
     if ( 
         userId != undefined & !isNaN(userId) &

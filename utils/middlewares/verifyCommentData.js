@@ -1,6 +1,8 @@
 
 
-
+/**
+ * check with a regex the comment content
+ */
 module.exports = ( req, res, next ) => {
 
     let userId = req.body.userId;

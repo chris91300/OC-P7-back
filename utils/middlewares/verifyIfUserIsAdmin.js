@@ -10,7 +10,7 @@ const User = require('../../models/UserModel')
  * else he can't
  */
 module.exports = async (req, res, next) => {
-    console.log("verify if user is admin")
+    
   try {
 
     const token = req.headers.authorization.split(' ')[1];
@@ -20,13 +20,15 @@ module.exports = async (req, res, next) => {
      try{
 
         let user = await User.findByPk( userId );
-        console.log(user)
+        
         if ( user.admin ){
-            console.log("user identifié et admin")
+            
             next();
+
         } else {
-            console.log("user non admin")
+            
             throw new Error();
+
         }
 
      }  catch ( err ) {

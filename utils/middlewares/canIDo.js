@@ -3,6 +3,9 @@ const Media = require('../../models/MediaModel');
 const User = require('../../models/UserModel');
 
 
+/**
+ * check if user can do what he want to do
+ */
 module.exports = async ( req, res, next ) => {
 
     let mediaId = req.params.id;

@@ -1,5 +1,7 @@
 
-
+/**
+ * create a url picture for the profil image 
+ */
 module.exports = ( req, res, next ) => {
 
     try{

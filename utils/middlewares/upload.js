@@ -1,6 +1,11 @@
 const path = require('path');
 const multer = require('multer');
 
+
+/**
+ * Use multer to upload the users medias
+ */
+
 const storage = multer.diskStorage({    
     destination : path.resolve('./medias'),
     filename : ( req, file, cb ) => {

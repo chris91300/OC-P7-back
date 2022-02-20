@@ -1,6 +1,8 @@
 
 
-
+/**
+ * Check with regex the datas value for create user
+ */
 const verifySignupUserData = ( req, res, next )=>{
     let { lastName, firstName, pseudo, email, password } = req.body;
 

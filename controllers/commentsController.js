@@ -8,7 +8,7 @@ const User = require('../models/UserModel');
  * get all comments on a specific media
  */
 exports.GET_ALL = async ( req, res ) => {
-    console.log("comment GET_ALL")
+    
     let mediaId = req.params.id;
 
     try{
@@ -36,7 +36,7 @@ exports.GET_ALL = async ( req, res ) => {
  * create a new comment about a media 
  */
 exports.CREATE = async ( req, res ) => {
-    console.log("comment CREATE")
+    
     let mediaId = req.params.id;
     let { userId , text } = req.body;
 
@@ -68,7 +68,7 @@ exports.CREATE = async ( req, res ) => {
  * set reported to true and add one to the total of reported
  */
  exports.REPORTED = async ( req, res ) => {
-    console.log("comment reported")
+    
     let mediaId = req.params.id;  
     let commentId = req.params.commentId;  
 
@@ -127,7 +127,7 @@ exports.CREATE = async ( req, res ) => {
  * get one comment
  */
  exports.GET_ONE = async ( req, res ) => {
-    console.log("comment GET_ONE")
+    
     let mediaId = req.params.id;
     let commentId = req.params.commentId;
 
@@ -162,7 +162,7 @@ exports.CREATE = async ( req, res ) => {
  * add userId on the array userLiked 
  */
 exports.LIKE = async ( req, res ) => {
-    console.log("comment like")
+    
     let mediaId = req.params.id;
     let commentId = req.params.commentId;
     let userId = req.body.userId;
@@ -241,7 +241,7 @@ exports.LIKE = async ( req, res ) => {
  * update a comment
  */
  exports.UPDATE = async ( req, res ) => {
-    console.log("comment update")
+    
     let mediaId = req.params.id;
     let commentId = req.params.commentId;
     let { userId , text } = req.body;

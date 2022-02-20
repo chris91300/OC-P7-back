@@ -1,6 +1,9 @@
 
 const Media = require('../../models/MediaModel');
 
+/**
+ * Check if media exist in the database
+ */
 module.exports = async ( req, res, next ) => {
     
     let mediaId = req.params.id;

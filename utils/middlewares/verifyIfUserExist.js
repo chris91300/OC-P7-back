@@ -1,6 +1,9 @@
 
 const User = require('../../models/UserModel');
 
+/**
+ * Check if user exist in the database
+ */
 module.exports = async ( req, res, next ) => {
     
     let userId = req.body.userId;

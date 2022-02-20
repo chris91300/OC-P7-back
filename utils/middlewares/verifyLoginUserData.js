@@ -1,5 +1,7 @@
 
-
+/**
+ * Check with regex the datas value for login user
+ */
 const verifyLoginUserData = ( req, res, next )=>{
     let { pseudo, password } = req.body;
 
