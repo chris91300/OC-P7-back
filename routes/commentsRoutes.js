@@ -12,16 +12,19 @@ const authorization = require('../utils/middlewares/authorization');
 
 router.get('/:id', authorization, verifyID, GET_ALL);
 
-router.get('/:id/:commentId', verifyID, verifyCommentID, GET_ONE);// pas utilisé
-
 router.post('/:id', authorization,  verifyID, verifyIfMediaExist, verifyCommentData, CREATE)
+
+router.post('/:id/:commentId/reported', authorization,  verifyID, verifyCommentID, verifyIfUserExist, REPORTED);
+
+
+
+
+router.get('/:id/:commentId', verifyID, verifyCommentID, GET_ONE);// pas utilisé
 
 router.put('/:id/:commentId/update', verifyID, verifyCommentID, verifyCommentData, UPDATE);// pas utilisé
 
 router.delete('/:id/:commentId/delete', verifyID, verifyCommentID, verifyIfUserExist, DELETE);// pas utilisé
 
 router.post('/:id/:commentId/like', verifyID, verifyCommentID, verifyIfUserExist, LIKE);// pas utilisé
-
-router.post('/:id/:commentId/reported', authorization,  verifyID, verifyCommentID, verifyIfUserExist, REPORTED);
 
 module.exports = router;

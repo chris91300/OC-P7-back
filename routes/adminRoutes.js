@@ -15,7 +15,7 @@ router.get('/medias/:id/remove_reported',authorization, verifyIfUserIsAdmin, MED
 
 router.get('/comments/reported',authorization, verifyIfUserIsAdmin, GET_COMMENTS_REPORTED); 
 
-router.delete('/comments/:id/delete',authorization, verifyIfUserIsAdmin, DELETE_COMMENT); 
+router.delete('/comments/:id/delete',authorization, verifyIfUserIsAdmin, DELETE_COMMENT);  
 
 router.get('/comments/:id/remove_reported',authorization, verifyIfUserIsAdmin, COMMENT_REMOVE_REPORTED); 
 
