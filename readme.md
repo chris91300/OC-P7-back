@@ -31,11 +31,11 @@ Il faut créer un fichier .env à la racine du projet.
 Dans le fichier mettre les variables suivantes :
 
 PORT=3000  
-DB_NAME=#"nom de la base de données que vous avez créée"#
+DB_NAME=**"nom de la base de données que vous avez créée"**  
 DB_HOST=localhost  
-DB_USER=#"nom de l'utilisateur de la base de doonée"#
-DB_PASSWORD=#"mot de passe de l'utilisateur"#
-TOKEN=#"un token"#
+DB_USER=**"nom de l'utilisateur de la base de doonée"**  
+DB_PASSWORD=**"mot de passe de l'utilisateur"**  
+TOKEN=**"un token"**  
 URLIMAGEDIRECTORY="http://localhost:3000/medias/"  
 URLPROFILDIRECTORY="http://localhost:3000/profils/"
 
