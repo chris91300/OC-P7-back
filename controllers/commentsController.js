@@ -31,39 +31,6 @@ exports.GET_ALL = async ( req, res ) => {
     }
 }
 
-/**
- * get one comment
- */
-exports.GET_ONE = async ( req, res ) => {
-    console.log("comment GET_ONE")
-    let mediaId = req.params.id;
-    let commentId = req.params.commentId;
-
-    try{
-
-        let results = await Comment.findAll( { where : { 
-            id : commentId,
-            mediaID : mediaId
-        }})
-
-        if ( results.length != 0) {
-
-            let comment = results[0].dataValues;
-
-            res.status(200).json( comment );
-
-        } else {
-
-            res.status(400).json( { message : "Commentaire inconnu." } );
-
-        }
-
-    } catch (err) {
-
-        res.status(500).json( { message : "Une erreur est survenue." } );
-
-    }
-}
 
 /**
  * create a new comment about a media 
@@ -96,37 +63,91 @@ exports.CREATE = async ( req, res ) => {
     }
 }
 
+
 /**
- * update a comment
+ * set reported to true and add one to the total of reported
  */
-exports.UPDATE = async ( req, res ) => {
-    console.log("comment update")
+ exports.REPORTED = async ( req, res ) => {
+    console.log("comment reported")
+    let mediaId = req.params.id;  
+    let commentId = req.params.commentId;  
+
+    try{
+
+        let where = {
+            id : commentId,
+            mediaID : mediaId
+        }
+
+        let result = await Comment.findAll( { where : where } );
+
+        if ( result.length != 0 ) {
+
+            let comment = result[0].dataValues;
+            let reportedTotal = comment.userReported + 1;
+
+
+            let query = await Comment.update(
+                    { reported : true, userReported : reportedTotal },
+                    { where : where }
+                )
+            
+            
+            if (!query){
+                throw new Error();
+            }
+
+            res.status(200).json({ message : "Nous avons bien pris en compte votre signalement."})
+
+
+        } else {
+            res.status(400).json( { message : "commentaire inconnu." } );
+        }
+
+    } catch (err) {
+
+        res.status(500).json( { message : "Une erreur est survenue." } );
+
+    }
+}
+
+
+
+
+
+
+/**
+ * ROUTE NOT USE FOR THE MOMENT
+ * CAN BE USE LATER IF NEEDED
+ */
+
+
+
+/**
+ * get one comment
+ */
+ exports.GET_ONE = async ( req, res ) => {
+    console.log("comment GET_ONE")
     let mediaId = req.params.id;
     let commentId = req.params.commentId;
-    let { userId , text } = req.body;
 
     try{
 
-        let update = {
-            text : text
-        };
+        let results = await Comment.findAll( { where : { 
+            id : commentId,
+            mediaID : mediaId
+        }})
 
-        let result = await Comment.update(
-            update,
-            { where : {
-                id : commentId,
-                userID : userId,
-                mediaID : mediaId
-            }})
-        console.log("result = "+result[0])
-        
-        if (result[0] != 0) {
+        if ( results.length != 0) {
 
-            res.status(200).json( { message : "Commentaire mis à jour." } );
+            let comment = results[0].dataValues;
+
+            res.status(200).json( comment );
 
         } else {
 
             res.status(400).json( { message : "Commentaire inconnu." } );
+
         }
 
     } catch (err) {
@@ -136,35 +157,6 @@ exports.UPDATE = async ( req, res ) => {
     }
 }
 
-/**
- * delete a comment
- */
-exports.DELETE = async ( req, res ) => {
-    console.log("comment delete")    
-    let commentId = req.params.id;
-    
-
-    try{
-        
-        
-        let result = await Comment.destroy({ where : {id : commentId} } )
-        
-        
-        if (result != undefined) {
-
-            res.status(200).json( { message : "Commentaire retiré." } );
-
-        } else {
-
-            res.status(400).json( { message : "Commentaire inconnu." } );
-        }
-
-    } catch (err) {
-
-        res.status(500).json( { message : "Une erreur est survenue." } );
-
-    }
-}
 
 /**
  * add userId on the array userLiked 
@@ -246,43 +238,36 @@ exports.LIKE = async ( req, res ) => {
 }
 
 /**
- * set reported to true and add one to the total of reported
+ * update a comment
  */
-exports.REPORTED = async ( req, res ) => {
-    console.log("comment reported")
-    let mediaId = req.params.id;  
-    let commentId = req.params.commentId;  
+ exports.UPDATE = async ( req, res ) => {
+    console.log("comment update")
+    let mediaId = req.params.id;
+    let commentId = req.params.commentId;
+    let { userId , text } = req.body;
 
     try{
 
-        let where = {
-            id : commentId,
-            mediaID : mediaId
-        }
+        let update = {
+            text : text
+        };
 
-        let result = await Comment.findAll( { where : where } );
+        let result = await Comment.update(
+            update,
+            { where : {
+                id : commentId,
+                userID : userId,
+                mediaID : mediaId
+            }})
+        console.log("result = "+result[0])
+        
+        if (result[0] != 0) {
 
-        if ( result.length != 0 ) {
-
-            let comment = result[0].dataValues;
-            let reportedTotal = comment.userReported + 1;
-
-
-            let query = await Comment.update(
-                    { reported : true, userReported : reportedTotal },
-                    { where : where }
-                )
-            
-            
-            if (!query){
-                throw new Error();
-            }
-
-            res.status(200).json({ message : "Nous avons bien pris en compte votre signalement."})
-
+            res.status(200).json( { message : "Commentaire mis à jour." } );
 
         } else {
-            res.status(400).json( { message : "commentaire inconnu." } );
+
+            res.status(400).json( { message : "Commentaire inconnu." } );
         }
 
     } catch (err) {
@@ -294,37 +279,3 @@ exports.REPORTED = async ( req, res ) => {
 
 
 
-/**
- * Allow to remove the report of the  comment only by admin
- */
- exports.REMOVE_REPORTED = async ( req, res ) => {
-    console.log("comment remove reported")
-    let commentId = req.params.id;  
-
-    try{
-
-        let comment = await Comment.findByPk( commentId );
-        
-        let reportedTotal = comment.userReported - 1;
-
-        let query = await Comment.update(
-                { reported : false, userReported : reportedTotal },
-                { where : { id : commentId } }
-            )
-        
-        
-        if (!query){
-            throw new Error();
-        }
-
-        res.status(200).json({ message : "Nous avons bien pris en compte votre signalement."})
-
-
-    } catch (err) {
-
-        res.status(500).json( { message : "Une erreur est survenue." } );
-
-    }
-
-   
-}

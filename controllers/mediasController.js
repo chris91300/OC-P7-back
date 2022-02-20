@@ -5,7 +5,6 @@ const Media = require('../models/MediaModel');
 const User = require('../models/UserModel');
 const path = require('path');
 const fs = require('fs');
-const Comment = require('../models/CommentModel');
 
 
 /**
@@ -39,33 +38,6 @@ exports.GET_ALL = async ( req, res ) => {
     }
     
 
-}
-
-
-/**
- * Get a specific media
- */
-exports.GET_ONE = async ( req, res ) => {
-    console.log("media GET_ONE")
-    let mediaId = req.params.id;
-
-    try{
-
-        let media = await Media.findByPk( mediaId, {
-            include : [{
-                model : User,
-                require : false
-            }]
-        });
-        console.log(media)
-        res.status(200).json(media);
-
-    } catch ( err ) {
-
-        console.log(err);
-        res.status(400).json( { message : err.message } );
-
-    }
 }
 
 
@@ -118,104 +90,10 @@ exports.CREATE = async ( req, res ) => {
 
 
 /**
- * Update a media
- */
-exports.UPDATE = async ( req, res ) => {
-    console.log("media update")
-    let mediaId = req.params.id;
-    let { userId, title, text } = req.body;
-    let file = req.file;
-    let dataUpdated = {
-        userId : userId,
-        title : title,
-        text : text
-    }
-
-    if (file) {
-        dataUpdated.fileName = file.filename;
-    }
-
-    try{
-
-        let result = await Media.findAll({where : { id : mediaId, userId : userId } } ); 
-
-        if ( result.length != 0 ) {
-            if ( file ){
-                let media = result[0].dataValues;
-                let oldFileName = media.fileName;
-                let oldPathFile = path.resolve('./medias')+"/"+oldFileName;
-                fs.unlink(oldPathFile, (err)=>{
-                    if (err ){ console.log(err)}
-                    console.log("fs unlink")
-                });
-            }
-            
-    
-            let mediaUpdated = await Media.update(dataUpdated, {where : { id : mediaId } });
-            if ( mediaUpdated ) {
-                res.json({message : "okokokokok"})
-            }  
-        } else {
-            res.status(401).json({message : "Vous n'êtes pas autorisé à modifier ce media"})
-        }
-             
-
-        
-    } catch ( err ) {
-
-        res.status(400).json( { message : err.message } )
-    }
-    
-}
-
-
-/**
- * Delete a media
- */
-exports.DELETE = async ( req, res ) => {
-    console.log("media delete")
-    let mediaId = req.params.id;
-
-    try{
-
-        let media = await Media.findByPk( mediaId );        
-        
-        let oldFileName = media.fileName;
-        let oldPathFile = path.resolve('./medias')+"/"+oldFileName;
-        
-        fs.unlink(oldPathFile, (err)=>{
-
-            if (err ){ console.log(err)}
-            
-        });
-
-        let resultDestroy = await Media.destroy({where : {
-            id : mediaId
-        }})
-    
-        if (resultDestroy){
-    
-            res.json({message : "supprimé"})
-
-        } else {
-            
-            res.status(401).json({message : "Vous n'êtes pas autorisé à supprimer ce media"})
-        }
-        
-
-        
-    }catch (err){
-        console.log(err)
-        res.status(500).json({message : "Une erreur est survenue."})
-    }
-    
-}
-
-/**
  * Allow to user to like the media
  */
 exports.LIKE = async ( req, res ) => {
-    console.log("media like")
+    
     let mediaId = req.params.id;
     let userId = req.body.userId;
     let like = req.body.like == 0 || req.body.like == 1 ? parseInt(req.body.like) : undefined;
@@ -322,37 +200,86 @@ exports.REPORTED = async ( req, res ) => {
 }
 
 
+
 /**
- * Allow to remove the report of the  media only by admin
+ * ROUTE NOT USE FOR THE MOMENT
+ * CAN BE USE LATER IF NEEDED
  */
- exports.REMOVE_REPORTED = async ( req, res ) => {
-    console.log("media remove reported")
-    let mediaId = req.params.id;  
+/*
+
+/**
+ * Get a specific media
+ */
+ exports.GET_ONE = async ( req, res ) => {
+    console.log("media GET_ONE")
+    let mediaId = req.params.id;
 
     try{
 
-        let media = await Media.findByPk( mediaId );
-        
-        let reportedTotal = media.userReported - 1;
+        let media = await Media.findByPk( mediaId, {
+            include : [{
+                model : User,
+                require : false
+            }]
+        });
+        console.log(media)
+        res.status(200).json(media);
 
-        let query = await Media.update(
-                { reported : false, userReported : reportedTotal },
-                { where : { id : mediaId } }
-            )
-        
-        
-        if (!query){
-            throw new Error();
-        }
+    } catch ( err ) {
 
-        res.status(200).json({ message : "Nous avons bien pris en compte votre signalement."})
-
-
-    } catch (err) {
-
-        res.status(500).json( { message : "Une erreur est survenue." } );
+        console.log(err);
+        res.status(400).json( { message : err.message } );
 
     }
+}
 
-   
+/**
+ * Update a media
+ */
+ exports.UPDATE = async ( req, res ) => {
+    console.log("media update")
+    let mediaId = req.params.id;
+    let { userId, title, text } = req.body;
+    let file = req.file;
+    let dataUpdated = {
+        userId : userId,
+        title : title,
+        text : text
+    }
+
+    if (file) {
+        dataUpdated.fileName = file.filename;
+    }
+
+    try{
+
+        let result = await Media.findAll({where : { id : mediaId, userId : userId } } ); 
+
+        if ( result.length != 0 ) {
+            if ( file ){
+                let media = result[0].dataValues;
+                let oldFileName = media.fileName;
+                let oldPathFile = path.resolve('./medias')+"/"+oldFileName;
+                fs.unlink(oldPathFile, (err)=>{
+                    if (err ){ console.log(err)}
+                    console.log("fs unlink")
+                });
+            }
+            
+    
+            let mediaUpdated = await Media.update(dataUpdated, {where : { id : mediaId } });
+            if ( mediaUpdated ) {
+                res.json({message : "okokokokok"})
+            }  
+        } else {
+            res.status(401).json({message : "Vous n'êtes pas autorisé à modifier ce media"})
+        }
+             
+
+        
+    } catch ( err ) {
+
+        res.status(400).json( { message : err.message } )
+    }
+    
 }

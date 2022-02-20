@@ -16,7 +16,7 @@ router.post('/signup', verifySignupUserData, createUrlProfil, SIGNUP);
 router.post('/login',verifyLoginUserData, LOGIN);
 
 
-router.put('/:id/update/password', verifyID, verifyUpdateUserData, UPDATE_PASSWORD);
+router.put('/:id/update/password', authorization, verifyID, verifyUpdateUserData, UPDATE_PASSWORD);
 
 router.put('/:id/update/picture', authorization, verifyID, uploadProfil , UPDATE_PICTURE);
 
