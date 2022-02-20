@@ -5,16 +5,12 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { response } = require('express');
 const User = require('../models/UserModel');
-const Media = require('../models/MediaModel');
-const Comment = require('../models/CommentModel');
 
 
 /**
- * user s'enregistre
- * OK
+ * create a new user
  */
 exports.SIGNUP = async ( req, res ) => {
-    console.log("user signup")
     
     let firstName = req.body.firstName;
     let lastName = req.body.lastName;
@@ -23,8 +19,9 @@ exports.SIGNUP = async ( req, res ) => {
     let password = req.body.password; 
     let urlProfil = req.body.urlProfil;   
 
-    try{ // try to get a hashed password 
+    try{ 
        
+        //  Hash password user for security
         let hash = await bcrypt.hash(password, 10);
 
         let data = {
@@ -69,7 +66,6 @@ exports.SIGNUP = async ( req, res ) => {
  * user log in
  */
 exports.LOGIN = async ( req, res ) => {
-    console.log("user login")
     
     let pseudo= req.body.pseudo;
     let password = req.body.password;
@@ -83,13 +79,17 @@ exports.LOGIN = async ( req, res ) => {
         let loginAttempt = user.loginAttempt;
         let timeToWait = 0;
         
-
+        /**
+         * Security for login attempt.
+         * over 5 attempts, add 2 sec to setTimeout for each attempt
+         * 6 attempt -> wait 2 sec
+         * 7 attempt -> wait 4 sec ...
+         */ 
         if ( loginAttempt > 5 ) {
             let base = 2000;
             timeToWait = base * ( loginAttempt - 5)
         }
-
-        console.log("on attent => "+ timeToWait);      
+    
 
         await setTimeout(async ()=>{
 
@@ -129,13 +129,13 @@ exports.LOGIN = async ( req, res ) => {
  * user update his password 
  */
 exports.UPDATE_PASSWORD = async ( req, res ) => {
-    console.log("user update")
+    
     let userId = req.params.id;
     let oldPassword = req.body.oldPassword;  
     let newPassword = req.body.newPassword; 
     let verificationNewPassword = req.body.verificationNewPassword; 
 
-    try{ // try to get a hashed password 
+    try{ 
 
         let user = await User.findByPk(userId);       
         
@@ -182,9 +182,11 @@ exports.UPDATE_PASSWORD = async ( req, res ) => {
 }
 
 
-
+/**
+ * user update his picture profil 
+ */
 exports.UPDATE_PICTURE = async (req, res ) => {
-    console.log("update picture")
+    
     if ( req.file ) {
 
         let userId = req.params.id;
@@ -192,9 +194,6 @@ exports.UPDATE_PICTURE = async (req, res ) => {
         let fileName = req.file.filename;
         let urlProfil = process.env.URLPROFILDIRECTORY + fileName
         let regexDefaultProfilPicture = /^profil_([1-9]||1[0-4]).jpg$/
-
-        /*let splitOldUrl = oldUrlProfil.split("/");
-        let lastIndex = parseInt(splitOldUrl.length) -1;*/
         let oldFileName = path.basename(oldUrlProfil);
 
         
@@ -206,8 +205,8 @@ exports.UPDATE_PICTURE = async (req, res ) => {
                 }});
     
             if ( userUpdate ) {
-                console.log(userUpdate);
-                // delete old
+                
+                // delete old picture
                 if ( !regexDefaultProfilPicture.test(oldFileName) ) {
                     let pathToUnlink = path.resolve('./profils')+"/"+oldFileName;
                     fs.unlink(pathToUnlink, (err)=>{
@@ -221,7 +220,7 @@ exports.UPDATE_PICTURE = async (req, res ) => {
             }
 
         }catch(err){
-            console.log(err)
+            
             res.status(500).json({ message : "Une erreur est survenue lors de la modification de votre photo" })
 
         }
@@ -236,36 +235,29 @@ exports.UPDATE_PICTURE = async (req, res ) => {
     }
 }
 
+
 /**
- * user supprime son profil
+ * delete user
  */
 exports.DELETE = async ( req, res ) => {
-    console.log("user delete")
+    
     let userId = req.params.id;
     let urlProfil = req.body.urlProfil;
 
     try {
+
+        // delete user and all medias and comments user
         await User.destroy({
             where: {
               id: userId
             }
           });
 
-          //    VISIBLEMENT TOUS CE QUI CONCERNE LE USER ID EST SUPPRIMÉ
-       /* await Media.destroy({
-            where: {
-                userId: userId
-              }
-        })
-
-        await Comment.destroy({
-            where: {
-                userId: userId
-              }
-        })*/
         
         let fileName = path.basename(urlProfil)
         let pathToUnlink = path.resolve('./profils')+"/"+fileName;
+
+        // remove picture profil user
         fs.unlink(pathToUnlink, (err)=>{
 
             if (err ){ console.log(err)}

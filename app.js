@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const helmet = require('helmet');
 const app = express();
 const usersRouter = require('./routes/usersRoutes');
@@ -7,21 +8,17 @@ const commentsRouter = require('./routes/commentsRoutes');
 const adminRouter = require('./routes/adminRoutes');
 
 
-
 app.use(express.json());
 
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization, Session');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    next();
-  });
 
+// SECURITY **************************************
 
-  // Pour que l'on puisse autoriser à récupérer les images
+app.use(cors());
+
 app.use(helmet());
+
+// COMMUNICATE WITH THE APPLICATION
 app.use(helmet.crossOriginResourcePolicy({ policy: "same-site" }));
-// pour communiquer avec l'API
 app.use(helmet.contentSecurityPolicy({
     directives : {
       defaultSrc: "localhost:8080",
@@ -31,9 +28,11 @@ app.use(helmet.contentSecurityPolicy({
 
 
 
-
+// INDICATE THE PUBLIC DIRECTORY
 app.use(express.static("medias"));
 app.use("/profils/", express.static("profils"));
+
+// ROUTER
 app.use('/api/users', usersRouter);
 app.use('/api/medias', mediasRouter);
 app.use('/api/comments', commentsRouter);

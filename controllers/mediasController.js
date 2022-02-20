@@ -12,7 +12,6 @@ const Comment = require('../models/CommentModel');
  * Get all medias
  */
 exports.GET_ALL = async ( req, res ) => {
-    console.log("media GET_ALL")
     
     try{
         

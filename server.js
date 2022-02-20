@@ -7,7 +7,7 @@ const Media = require('./models/MediaModel');
 
 
   
-  
+//  CONNECT TO THE DATABASE
   let connection = async ()=>{
     try {
 
