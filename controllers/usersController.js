@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { response } = require('express');
 const User = require('../models/UserModel');
+const Media = require('../models/MediaModel');
 
 
 /**
@@ -208,7 +209,7 @@ exports.UPDATE_PICTURE = async (req, res ) => {
     
             if ( userUpdate ) {
                 
-                // delete old picture
+                // delete old picture if it's not a default picture
                 if ( !regexDefaultProfilPicture.test(oldFileName) ) {
                     let pathToUnlink = path.resolve('./profils')+"/"+oldFileName;
                     fs.unlink(pathToUnlink, (err)=>{
@@ -245,8 +246,16 @@ exports.DELETE = async ( req, res ) => {
     
     let userId = req.params.id;
     let urlProfil = req.body.urlProfil;
-
+    let regexDefaultProfilPicture = /^profil_([1-9]||1[0-4]).jpg$/
     try {
+
+        let medias = await Media.findAll({
+            where: {
+                userId: userId
+              }
+        })
+
+        
 
         // delete user and all medias and comments user
         await User.destroy({
@@ -257,14 +266,29 @@ exports.DELETE = async ( req, res ) => {
 
         
         let fileName = path.basename(urlProfil)
-        let pathToUnlink = path.resolve('./profils')+"/"+fileName;
 
-        // remove picture profil user
-        fs.unlink(pathToUnlink, (err)=>{
+        // delete old picture if it's not a default picture
+        if ( !regexDefaultProfilPicture.test(fileName) ) {
 
-            if (err ){ console.log(err)}
+            let pathToUnlink = path.resolve('./profils')+"/"+fileName;
+            fs.unlink(pathToUnlink, (err)=>{
+
+                if (err ){ console.log(err)}
+                
+            });
+        }
+
+        // delete all media picture of the user in the directory medias
+        medias.map((media)=>{
             
-        });
+            let mediaName = media.fileName;
+            let mediaPath = path.resolve('./medias')+"/"+mediaName;
+            fs.unlink(mediaPath, (err)=>{
+                
+                if (err ){ console.log(err)}
+                
+            });
+        })
 
           res.status(200).json({message : "Votre profil à bien été supprimé."});
 
