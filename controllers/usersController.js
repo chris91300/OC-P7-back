@@ -48,14 +48,16 @@ exports.SIGNUP = async ( req, res ) => {
 
             }
 
-        } catch (err) {// catch save user
-                       
-            res.status(400).json({ message : "pseudo déjà pris" })
+        } catch (err) {// catch save user            
+            
+            let item = err.errors[0].path;
+            let message = item != undefined ? `${item} déjà pris` : "Une erreur est survenue";
+            res.status(400).json({ message : message })
         }
         
 
     } catch ( err ) {// catch hash password
-        
+        console.log(err)
         res.status(500).json({ message : "Une erreur est survenue lors de votre enregistrement" })
     }
         
